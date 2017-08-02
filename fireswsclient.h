@@ -6,7 +6,14 @@
 
 class FiresWSClient : public QObject
 {
+    Q_OBJECT
+
 public:
+    enum class State {
+        CONNECTING = 1,
+        CONNECTED
+    };
+
     FiresWSClient(
             const QString& ip_address_,
             int port_,
@@ -14,8 +21,12 @@ public:
             const QString& pass_,
             QObject* parent = Q_NULLPTR);
 
+signals:
+    void clientStatusChanged(State new_state);
+
 private slots:
     void onChannelConnected();
+    void onChannelDisconnected();
     void onGotFire(QString data);
 
 private:
@@ -25,6 +36,8 @@ private:
     QString pass;
 
     QWebSocket channel;
+
+    void open_channel();
 };
 
 #endif // FIRESWSCLIENT_H
