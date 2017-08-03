@@ -23,6 +23,7 @@ public:
 
 signals:
     void clientStatusChanged(State new_state);
+    void gotMessage(QString data);
 
 private slots:
     void onChannelConnected();

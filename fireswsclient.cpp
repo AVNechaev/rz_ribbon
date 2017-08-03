@@ -24,6 +24,7 @@ void FiresWSClient::onChannelConnected()
     connect(&channel, &QWebSocket::textMessageReceived, this, &FiresWSClient::onGotFire);
     channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"nechaev.andrey@gmail.com\",\"password\":\"123456\"}");
     qInfo() << "connected";
+    emit gotMessage("connected");
 }
 
 void FiresWSClient::onChannelDisconnected()
@@ -35,6 +36,7 @@ void FiresWSClient::onChannelDisconnected()
 void FiresWSClient::onGotFire(QString data)
 {
     qInfo() << "Got Message:" << data;
+    emit gotMessage(data);
 }
 
 void FiresWSClient::open_channel()

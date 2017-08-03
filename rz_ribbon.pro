@@ -14,7 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    fireswsclient.cpp
+    fireswsclient.cpp \
+    notificator.cpp
 
 HEADERS  += mainwindow.h \
-    fireswsclient.h
+    fireswsclient.h \
+    notificator.h
+
+RESOURCES += \
+    resources.qrc
