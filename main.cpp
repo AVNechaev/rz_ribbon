@@ -1,16 +1,9 @@
-#include "mainwindow.h"
-#include <QApplication>
-#include "fireswsclient.h"
-#include "notificator.h"
+#include "ribbonapp.h"
 
 int main(int argc, char *argv[])
 {    
-    QApplication a(argc, argv);    
-    FiresWSClient cli("addr", 8888, "user", "password");
+    RibbonApp a(argc, argv);
 
-    Notificator wnd;
-    QObject::connect(&cli, &FiresWSClient::gotMessage, &wnd, &Notificator::on_fires_message);
-    wnd.show();
-
+    a.start();
     return a.exec();
 }

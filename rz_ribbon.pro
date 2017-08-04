@@ -12,14 +12,19 @@ TARGET = rz_ribbon
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES += main.cpp\        
     fireswsclient.cpp \
-    notificator.cpp
+    notificator.cpp \
+    ribbonapp.cpp \
+    settingswindow.cpp
 
-HEADERS  += mainwindow.h \
-    fireswsclient.h \
-    notificator.h
+HEADERS  += fireswsclient.h \
+    notificator.h \
+    ribbonapp.h \
+    settingswindow.h
 
 RESOURCES += \
     resources.qrc
+
+FORMS += \
+    settingswindow.ui

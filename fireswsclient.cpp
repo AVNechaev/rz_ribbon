@@ -13,29 +13,27 @@ FiresWSClient::FiresWSClient(
     pass(pass_)
 {
     connect(&channel, &QWebSocket::connected, this, &FiresWSClient::onChannelConnected);
-    connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);
-    emit clientStatusChanged(State::CONNECTING);
+    connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);    
     open_channel();
 }
 
 void FiresWSClient::onChannelConnected()
 {
-    emit clientStatusChanged(State::CONNECTED);
+    emit clientConnected();
     connect(&channel, &QWebSocket::textMessageReceived, this, &FiresWSClient::onGotFire);
-    channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"nechaev.andrey@gmail.com\",\"password\":\"123456\"}");
-    qInfo() << "connected";
-    emit gotMessage("connected");
+    channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"" + user_name + "\",\"password\":\"" + pass + "\"}");
+    qDebug() << "connected";
 }
 
 void FiresWSClient::onChannelDisconnected()
 {
-    emit clientStatusChanged(State::CONNECTING);
+    emit clientDisconnected();
     open_channel();
 }
 
 void FiresWSClient::onGotFire(QString data)
 {
-    qInfo() << "Got Message:" << data;
+    qDebug() << "Got Message:" << data;
     emit gotMessage(data);
 }
 
@@ -43,7 +41,7 @@ void FiresWSClient::open_channel()
 {
     QUrl url;
     url.setScheme("ws");
-    url.setHost("930nyse.com");
+    url.setHost(ip_address);
     url.setPort(port);
     channel.open(url);
 }

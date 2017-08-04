@@ -2,7 +2,7 @@
 #define NOTIFICATOR_H
 
 #include <QSystemTrayIcon>
-#include "fireswsclient.h"
+#include <QMenu>
 
 class Notificator : public QSystemTrayIcon
 {
@@ -11,9 +11,20 @@ class Notificator : public QSystemTrayIcon
 public:
     Notificator(QObject* parent = Q_NULLPTR);
 
+signals:
+    void exitting();
+
 public slots:
     void on_fires_message(QString message);
 
+private slots:
+    void showSettings();
+    void exit();
+
+private:
+    QAction* actSettings;
+    QAction* actExit;
+    QMenu* menu;
 };
 
 #endif // NOTIFICATOR_H

@@ -9,11 +9,6 @@ class FiresWSClient : public QObject
     Q_OBJECT
 
 public:
-    enum class State {
-        CONNECTING = 1,
-        CONNECTED
-    };
-
     FiresWSClient(
             const QString& ip_address_,
             int port_,
@@ -22,7 +17,8 @@ public:
             QObject* parent = Q_NULLPTR);
 
 signals:
-    void clientStatusChanged(State new_state);
+    void clientConnected();
+    void clientDisconnected();
     void gotMessage(QString data);
 
 private slots:
