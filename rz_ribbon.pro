@@ -16,15 +16,21 @@ SOURCES += main.cpp\
     fireswsclient.cpp \
     notificator.cpp \
     ribbonapp.cpp \
-    settingswindow.cpp
+    settingswindow.cpp \
+    ribbonwnd.cpp \
+    ribbonmodel.cpp
 
 HEADERS  += fireswsclient.h \
     notificator.h \
     ribbonapp.h \
-    settingswindow.h
+    settingswindow.h \
+    ribbonwnd.h \
+    firedata.h \
+    ribbonmodel.h
 
 RESOURCES += \
     resources.qrc
 
 FORMS += \
-    settingswindow.ui
+    settingswindow.ui \
+    ribbonwnd.ui

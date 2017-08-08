@@ -1,4 +1,6 @@
 #include "fireswsclient.h"
+#include <QJsonDocument>
+#include <QJsonObject>
 
 FiresWSClient::FiresWSClient(
         const QString &ip_address_,
@@ -22,7 +24,7 @@ void FiresWSClient::onChannelConnected()
     emit clientConnected();
     connect(&channel, &QWebSocket::textMessageReceived, this, &FiresWSClient::onGotFire);
     channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"" + user_name + "\",\"password\":\"" + pass + "\"}");
-    qDebug() << "connected";
+    qDebug() << "connected";    
 }
 
 void FiresWSClient::onChannelDisconnected()
@@ -32,9 +34,27 @@ void FiresWSClient::onChannelDisconnected()
 }
 
 void FiresWSClient::onGotFire(QString data)
-{
+{    
     qDebug() << "Got Message:" << data;
-    emit gotMessage(data);
+
+    QJsonDocument doc = QJsonDocument::fromBinaryData(data.toUtf8());
+    try
+    {
+        if(doc.isNull()) throw std::runtime_error("doc is null");
+        const QJsonObject& obj = doc.object();
+        FireData result;
+        if(!obj["pattern_name"].isString()) throw std::runtime_error("no pattern_name");
+        if(!obj["instr"].isString()) throw std::runtime_error("no instr");
+        if(!obj["ts"].isString()) throw std::runtime_error("no ts");
+        result.pattern_name = obj["pattern_name"].toString();
+        result.instr_name = obj["instr"].toString();
+        result.fire_time = obj["ts"].toString();
+        emit gotMessage(result);
+    }
+    catch(const std::runtime_error& e)
+    {
+        qWarning() << "undecoded message: " << data << ": " << e.what();
+    }
 }
 
 void FiresWSClient::open_channel()

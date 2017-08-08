@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtWebSockets/QWebSocket>
+#include "firedata.h"
 
 class FiresWSClient : public QObject
 {
@@ -19,7 +20,7 @@ public:
 signals:
     void clientConnected();
     void clientDisconnected();
-    void gotMessage(QString data);
+    void gotMessage(FireData data);
 
 private slots:
     void onChannelConnected();
