@@ -13,9 +13,12 @@ FiresWSClient::FiresWSClient(
     port(port_),
     user_name(user_name_),
     pass(pass_)
-{
+{    
+    timer.setInterval(10000);
+    timer.start();
     connect(&channel, &QWebSocket::connected, this, &FiresWSClient::onChannelConnected);
     connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);    
+    //connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
     open_channel();
 }
 
@@ -24,7 +27,7 @@ void FiresWSClient::onChannelConnected()
     emit clientConnected();
     connect(&channel, &QWebSocket::textMessageReceived, this, &FiresWSClient::onGotFire);
     channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"" + user_name + "\",\"password\":\"" + pass + "\"}");
-    qDebug() << "connected";    
+    qDebug() << "connected";
 }
 
 void FiresWSClient::onChannelDisconnected()
@@ -37,7 +40,7 @@ void FiresWSClient::onGotFire(QString data)
 {    
     qDebug() << "Got Message:" << data;
 
-    QJsonDocument doc = QJsonDocument::fromBinaryData(data.toUtf8());
+    QJsonDocument doc = QJsonDocument::fromJson(data.toUtf8());
     try
     {
         if(doc.isNull()) throw std::runtime_error("doc is null");
@@ -55,6 +58,13 @@ void FiresWSClient::onGotFire(QString data)
     {
         qWarning() << "undecoded message: " << data << ": " << e.what();
     }
+}
+
+void FiresWSClient::onTimer()
+{
+    static int cnt=0;
+    QString data = QString("ByTimer %1").arg(cnt++);
+    emit gotMessage(FireData{data, "-", "Now"});
 }
 
 void FiresWSClient::open_channel()

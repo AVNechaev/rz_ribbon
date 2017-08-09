@@ -1,6 +1,7 @@
 #include "ribbonmodel.h"
 
-RibbonModel::RibbonModel(size_t depth_) :
+RibbonModel::RibbonModel(int depth_, QObject *parent) :
+    QAbstractTableModel(parent),
     depth(depth_)
 {
 
@@ -8,23 +9,41 @@ RibbonModel::RibbonModel(size_t depth_) :
 
 int RibbonModel::rowCount(const QModelIndex&) const
 {
-//TODO
-    return 0;
+    return depth; //return as much data as possible
+    //return storage.size();
 }
 
 int RibbonModel::columnCount(const QModelIndex&) const
 {
-//    TODO
-    return 0;
+    return 1;
 }
 
-QVariant RibbonModel::data(const QModelIndex &, int) const
+QVariant RibbonModel::data(const QModelIndex& index, int role) const
 {
-//    TODO
-    return QString();
+    switch(role)
+    {
+    case Qt::DisplayRole:
+        return extract_data(index);
+    default:
+        return QVariant();
+    }
 }
 
-void RibbonModel::on_fire(FireData)
+void RibbonModel::on_fire(FireData msg)
 {
-//TODO
+    static const QVector<int> affectedRole {Qt::DisplayRole};
+
+    if(storage.size() >= depth)
+        storage.pop_back();
+    storage.push_front(msg);
+    emit dataChanged(createIndex(0,0), createIndex(storage.size() - 1, 0));
+}
+
+QVariant RibbonModel::extract_data(const QModelIndex &index) const
+{
+    int row = index.row();
+    if(row >= storage.size()) return QVariant();
+
+    const FireData& data = storage.at(row);
+    return QString(data.pattern_name + "\n" + data.instr_name + " " + data.fire_time);
 }

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtWebSockets/QWebSocket>
 #include "firedata.h"
+#include <QTimer>
 
 class FiresWSClient : public QObject
 {
@@ -27,6 +28,8 @@ private slots:
     void onChannelDisconnected();
     void onGotFire(QString data);
 
+    void onTimer();
+
 private:
     QString ip_address;
     int port;
@@ -34,6 +37,8 @@ private:
     QString pass;
 
     QWebSocket channel;
+
+    QTimer timer;
 
     void open_channel();
 };

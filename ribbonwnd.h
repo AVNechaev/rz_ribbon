@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+class QAbstractItemModel;
 namespace Ui {
 class RibbonWnd;
 }
@@ -13,6 +14,7 @@ class RibbonWnd : public QDialog
 
 public:
     explicit RibbonWnd(QWidget *parent = 0);
+    void setModel(QAbstractItemModel *model);
     ~RibbonWnd();
 
 public slots:

@@ -6,26 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>224</width>
-    <height>443</height>
+    <width>214</width>
+    <height>432</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QTableView" name="tblMain">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>80</y>
-     <width>181</width>
-     <height>192</height>
-    </rect>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTableView" name="tblMain"/>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

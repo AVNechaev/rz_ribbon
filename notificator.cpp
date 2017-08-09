@@ -29,8 +29,7 @@ Notificator::Notificator(QObject *parent) :
 
 void Notificator::on_fires_message(FireData message)
 {
-    showMessage("new message", message.pattern_name + " " + message.instr_name);
-    qDebug() << "GOT FIRE: " << message.instr_name;
+    showMessage(tr("Pattern fired"), message.pattern_name + " " + message.instr_name);
 }
 
 void Notificator::showSettings()

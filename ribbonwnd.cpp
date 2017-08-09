@@ -8,6 +8,11 @@ RibbonWnd::RibbonWnd(QWidget *parent) :
     ui->setupUi(this);
 }
 
+void RibbonWnd::setModel(QAbstractItemModel *model)
+{
+    ui->tblMain->setModel(model);
+}
+
 RibbonWnd::~RibbonWnd()
 {
     delete ui;
