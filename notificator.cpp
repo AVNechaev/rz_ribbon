@@ -24,7 +24,7 @@ Notificator::Notificator(QObject *parent) :
     connect(actSettings, &QAction::triggered, this, &Notificator::showSettings);
     connect(actToggleRibbon, &QAction::triggered, this, &Notificator::on_toggle_ribbon);
     connect(actExit, &QAction::triggered, this, &Notificator::exit);    
-    setVisible(true);
+    setVisible(true);    
 }
 
 void Notificator::on_fires_message(FireData message)

@@ -6,6 +6,8 @@ RibbonWnd::RibbonWnd(QWidget *parent) :
     ui(new Ui::RibbonWnd)
 {
     ui->setupUi(this);
+    setStyleSheet("background-color:#37474f; color:white; font-size: 11px");
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 }
 
 void RibbonWnd::setModel(QAbstractItemModel *model)
