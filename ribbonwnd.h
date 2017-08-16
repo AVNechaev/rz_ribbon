@@ -20,8 +20,13 @@ public:
 public slots:
     void toggle();
 
+protected:
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+
 private:
     Ui::RibbonWnd *ui;
+    QPoint drag_pos;
 };
 
 #endif // RIBBONWND_H

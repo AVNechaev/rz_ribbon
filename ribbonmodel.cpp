@@ -45,5 +45,11 @@ QVariant RibbonModel::extract_data(const QModelIndex &index) const
     if(row >= storage.size()) return QVariant();
 
     const FireData& data = storage.at(row);
-    return QString(data.pattern_name + "\n" + data.instr_name + " " + data.fire_time);
+    QString trunc_name = data.pattern_name;
+    if(trunc_name.size() > 40)
+    {
+        trunc_name.truncate(35);
+        trunc_name.append("...");
+    }
+    return QString(trunc_name + "\n" + data.instr_name + " " + data.fire_time);
 }

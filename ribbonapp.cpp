@@ -7,8 +7,9 @@
 
 RibbonApp::RibbonApp(int argc, char **argv) :
     QApplication(argc, argv)
-{
-    cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");
+{    
+    //cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");
+    cli = new FiresWSClient("185.11.244.244", 8888, "nechaev.andrey@gmail.com", "123456");
     notificator = new Notificator(this);
     ribbon_data = new RibbonModel(RIBBON_DEPTH, this);
     ribbon_wnd = new RibbonWnd();
@@ -21,6 +22,10 @@ RibbonApp::RibbonApp(int argc, char **argv) :
 }
 
 void RibbonApp::start()
-{    
+{
+    setApplicationDisplayName(tr("RZ Ribbon"));
+    setApplicationName(tr("RZ Ribbon"));
+    setWindowIcon(QIcon(":/images/trayicon.png"));
+    setQuitOnLastWindowClosed(false);
     notificator->show();
 }

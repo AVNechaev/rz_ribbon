@@ -26,7 +26,8 @@ HEADERS  += fireswsclient.h \
     settingswindow.h \
     ribbonwnd.h \
     firedata.h \
-    ribbonmodel.h
+    ribbonmodel.h \
+    settings.h
 
 RESOURCES += \
     resources.qrc
