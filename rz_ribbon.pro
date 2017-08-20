@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     ribbonapp.cpp \
     settingswindow.cpp \
     ribbonwnd.cpp \
-    ribbonmodel.cpp
+    ribbonmodel.cpp \
+    settings.cpp
 
 HEADERS  += fireswsclient.h \
     notificator.h \
