@@ -2,9 +2,11 @@
 #include <QMenu>
 #include <QDebug>
 #include "settingswindow.h"
+#include "settings.h"
 
 Notificator::Notificator(QObject *parent) :
     QSystemTrayIcon(parent),
+    show_notifications(false),
     ribbon_shown(false)
 {
     QIcon icon(":/images/trayicon.png");
@@ -29,7 +31,20 @@ Notificator::Notificator(QObject *parent) :
 
 void Notificator::on_fires_message(FireData message)
 {
-    showMessage(tr("Pattern fired"), message.pattern_name + " " + message.instr_name);
+    if(show_notifications)
+        showMessage(tr("Pattern fired"), message.pattern_name + " " + message.instr_name);
+}
+
+void Notificator::settings_changed(const Settings *settings)
+{
+    show_notifications = settings->isShow_notifications();
+    if(settings->isShow_ribbon())
+        actToggleRibbon->setEnabled(true);
+    else
+    {
+        actToggleRibbon->setEnabled(false);
+        if(ribbon_shown) on_toggle_ribbon();
+    }
 }
 
 void Notificator::showSettings()

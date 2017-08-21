@@ -3,36 +3,36 @@
 
 #include <QObject>
 
-struct Settings : public QObject
+class Settings : public QObject
 {
     Q_OBJECT
 
 signals:
-    void changed(const Settings& self);
+    void changed(const Settings* self);
 
 public:
-    explicit Settings(QObject* = Q_NULLPTR) {}
+    explicit Settings(QObject* = Q_NULLPTR);
 
-    QString getLogin() const;
-    void setLogin(const QString &value);
+    bool load();
+    void store();
 
-    QString getPasswd() const;
-    void setPasswd(const QString &value);
+    void setSettings(const QString& login_,
+                     const QString& passwd_,
+                     const QString& server_,
+                     int port_,
+                     bool show_notifications_,
+                     bool show_ribbon_,
+                     bool write_log_,
+                     const QString& logfile_);
 
-    QString getServer() const;
-    void setServer(const QString &value);
-
-    int getPort() const;
-    void setPort(int value);
-
-    bool isShow_notifications() const;
-    void setShow_notifications(bool value);
-
-    bool isShow_ribbon() const;
-    void setShow_ribbon(bool value);
-
-    QString getLogfile() const;
-    void setLogfile(const QString &value);
+    QString getLogin() const { return login; }
+    QString getPasswd() const { return passwd; }
+    QString getServer() const { return server; }
+    int getPort() const { return port; }
+    bool isShow_notifications() const { return show_notifications; }
+    bool isShow_ribbon() const { return show_ribbon; }
+    bool isWrite_log() const { return write_log; }
+    QString getLogfile() const { return logfile; }
 
 private:
     QString login;
@@ -41,8 +41,10 @@ private:
     int port;
     bool show_notifications;
     bool show_ribbon;
-
+    bool write_log;
     QString logfile;
+
+    QString settingsFileName() const;
 };
 
 

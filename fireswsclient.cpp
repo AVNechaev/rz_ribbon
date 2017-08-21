@@ -49,9 +49,11 @@ void FiresWSClient::onGotFire(QString data)
         if(!obj["pattern_name"].isString()) throw std::runtime_error("no pattern_name");
         if(!obj["instr"].isString()) throw std::runtime_error("no instr");
         if(!obj["ts"].isString()) throw std::runtime_error("no ts");
+        if(!obj["pattern_id"].isDouble()) throw std::runtime_error("no pattern_id");
         result.pattern_name = obj["pattern_name"].toString();
         result.instr_name = obj["instr"].toString();
         result.fire_time = obj["ts"].toString();
+        result.pattern_id = obj["pattern_id"].toInt();
         emit gotMessage(result);
     }
     catch(const std::runtime_error& e)
@@ -64,7 +66,7 @@ void FiresWSClient::onTimer()
 {
     static int cnt=0;
     QString data = QString("ByTimer %1").arg(cnt++);
-    emit gotMessage(FireData{data, "-", "Now"});
+    emit gotMessage(FireData{0, data, "-", "Now"});
 }
 
 void FiresWSClient::open_channel()

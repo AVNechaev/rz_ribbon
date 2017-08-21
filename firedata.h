@@ -5,6 +5,7 @@
 
 struct FireData
 {
+    int pattern_id;
     QString pattern_name;
     QString instr_name;
     QString fire_time;

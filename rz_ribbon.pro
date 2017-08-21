@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     settingswindow.cpp \
     ribbonwnd.cpp \
     ribbonmodel.cpp \
-    settings.cpp
+    settings.cpp \
+    logwriter.cpp
 
 HEADERS  += fireswsclient.h \
     notificator.h \
@@ -28,7 +29,8 @@ HEADERS  += fireswsclient.h \
     ribbonwnd.h \
     firedata.h \
     ribbonmodel.h \
-    settings.h
+    settings.h \
+    logwriter.h
 
 RESOURCES += \
     resources.qrc

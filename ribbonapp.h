@@ -7,6 +7,8 @@ class FiresWSClient;
 class Notificator;
 class RibbonWnd;
 class RibbonModel;
+class LogWriter;
+class Settings;
 
 class RibbonApp : public QApplication
 {
@@ -20,6 +22,8 @@ private:
     Notificator* notificator;
     RibbonWnd* ribbon_wnd;
     RibbonModel* ribbon_data;
+    LogWriter* log_writer;
+    Settings* settings;
 
     static const size_t RIBBON_DEPTH = 10;
 };

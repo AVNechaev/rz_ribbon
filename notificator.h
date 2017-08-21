@@ -5,6 +5,7 @@
 #include <QMenu>
 #include "firedata.h"
 
+class Settings;
 class Notificator : public QSystemTrayIcon
 {
     Q_OBJECT
@@ -18,6 +19,7 @@ signals:
 
 public slots:
     void on_fires_message(FireData message);
+    void settings_changed(const Settings* settings);
 
 private slots:
     void showSettings();   
@@ -29,6 +31,7 @@ private:
     QAction* actToggleRibbon;
     QAction* actExit;
     QMenu* menu;
+    bool show_notifications;
     bool ribbon_shown;
 };
 
