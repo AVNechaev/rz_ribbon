@@ -25,6 +25,8 @@ private:
     bool enabled;
     int lines_written;
     QFile file;
+
+    std::map<int, int> pat_id2tf;
 };
 
 #endif // LOGWRITER_H
