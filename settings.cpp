@@ -3,13 +3,6 @@
 #include <QSettings>
 #include <QStandardPaths>
 
-template<typename T>
-bool set_val(T& cur_data, const T& new_data)
-{
-    if(cur_data != new_data) {cur_data = new_data; return true; }
-    return false;
-}
-
 Settings::Settings(QObject *)
 {
 

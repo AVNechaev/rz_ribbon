@@ -34,6 +34,13 @@ public:
     bool isWrite_log() const { return write_log; }
     QString getLogfile() const { return logfile; }
 
+    template<typename T>
+    static bool set_val(T& cur_data, const T& new_data)
+    {
+        if(cur_data != new_data) {cur_data = new_data; return true; }
+        return false;
+    }
+
 private:
     QString login;
     QString passwd;

@@ -10,8 +10,8 @@
 RibbonApp::RibbonApp(int argc, char **argv) :
     QApplication(argc, argv)
 {    
-    //cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");
-    cli = new FiresWSClient("185.11.244.244", 8888, "nechaev.andrey@gmail.com", "123456");
+    //cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");    
+    cli = new FiresWSClient(this);
     notificator = new Notificator(this);
     ribbon_data = new RibbonModel(RIBBON_DEPTH, this);
     ribbon_wnd = new RibbonWnd();
@@ -25,6 +25,7 @@ RibbonApp::RibbonApp(int argc, char **argv) :
     connect(cli, &FiresWSClient::gotMessage, ribbon_data, &RibbonModel::on_fire);
     connect(cli, &FiresWSClient::gotMessage, log_writer, &LogWriter::on_fires_message);
 
+    connect(settings, &Settings::changed, cli, &FiresWSClient::settings_changed);
     connect(settings, &Settings::changed, log_writer, &LogWriter::settings_changed);
     connect(settings, &Settings::changed, notificator, &Notificator::settings_changed);
 
@@ -34,7 +35,7 @@ RibbonApp::RibbonApp(int argc, char **argv) :
                 "185.11.244.244",
                 8888,
                 false,
-                false,
+                true,
                 true,
                 "./data.log");
 }

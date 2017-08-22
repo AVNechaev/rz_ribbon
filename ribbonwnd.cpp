@@ -8,7 +8,7 @@ RibbonWnd::RibbonWnd(QWidget *parent) :
     ui(new Ui::RibbonWnd)
 {
     ui->setupUi(this);
-    setStyleSheet("background-color:#37474f; color:white; font-size: 12px");
+    setStyleSheet("background-color:#37474f; color:white; font-size: 12px; font-family: \"Roboto Condensed\"");
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);    
     ui->tblMain->setAttribute(Qt::WA_TransparentForMouseEvents);
 }

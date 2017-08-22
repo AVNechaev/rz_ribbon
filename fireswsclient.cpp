@@ -1,6 +1,7 @@
 #include "fireswsclient.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "settings.h"
 
 FiresWSClient::FiresWSClient(
         const QString &ip_address_,
@@ -8,18 +9,27 @@ FiresWSClient::FiresWSClient(
         const QString &user_name_,
         const QString &pass_,
         QObject *parent) :
-    QObject(parent),
-    ip_address(ip_address_),
-    port(port_),
-    user_name(user_name_),
-    pass(pass_)
-{    
-    timer.setInterval(10000);
-    timer.start();
-    connect(&channel, &QWebSocket::connected, this, &FiresWSClient::onChannelConnected);
-    connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);    
+    FiresWSClient(parent)
+{
+    ip_address = ip_address_;
+    port = port_;
+    user_name = user_name_;
+    pass = pass_;
+    //    timer.setInterval(10000);
+    //    timer.start();
     //connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
     open_channel();
+}
+
+FiresWSClient::FiresWSClient(QObject *parent) :
+    QObject(parent),
+    ip_address(),
+    port(0),
+    user_name(),
+    pass()
+{
+    connect(&channel, &QWebSocket::connected, this, &FiresWSClient::onChannelConnected);
+    connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);
 }
 
 void FiresWSClient::onChannelConnected()
@@ -69,8 +79,25 @@ void FiresWSClient::onTimer()
     emit gotMessage(FireData{0, data, "-", "Now"});
 }
 
+void FiresWSClient::settings_changed(const Settings *settings)
+{
+    bool changed = false;
+    changed |= Settings::set_val(ip_address, settings->getServer());
+    changed |= Settings::set_val(port, settings->getPort());
+    changed |= Settings::set_val(user_name, settings->getLogin());
+    changed |= Settings::set_val(pass, settings->getPasswd());
+    if(changed)
+    {
+        channel.close();
+        open_channel();
+    }
+}
+
 void FiresWSClient::open_channel()
 {
+    if(user_name.isEmpty() || pass.isEmpty() || ip_address.isEmpty() || port == 0)
+        return;
+
     QUrl url;
     url.setScheme("ws");
     url.setHost(ip_address);

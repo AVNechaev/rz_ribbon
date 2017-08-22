@@ -95,9 +95,10 @@ void LogWriter::settings_changed(const Settings* settings)
     if(enabled == settings->isWrite_log()) return;
     if(file.isOpen()) file.close();
     if(settings->isWrite_log())
-    {
+    {        
         file.setFileName(settings->getLogfile());
         file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+        file.setTextModeEnabled(true);
     }
     enabled = settings->isWrite_log();
 }
@@ -111,8 +112,9 @@ void LogWriter::on_fires_message(FireData message)
 
     if(lines_written > MAX_LINES_WRITTEN)
     {
-        file.close();
+        file.close();        
         file.open(QIODevice::ReadWrite | QIODevice::Truncate);
+        file.setTextModeEnabled(true);
         lines_written = 0;
     }
     int frame = 0;
