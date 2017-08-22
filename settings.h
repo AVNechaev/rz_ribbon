@@ -16,7 +16,7 @@ public:
     bool load();
     void store();
 
-    void setSettings(const QString& login_,
+    void set(const QString& login_,
                      const QString& passwd_,
                      const QString& server_,
                      int port_,

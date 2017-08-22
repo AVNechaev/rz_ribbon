@@ -14,7 +14,7 @@ class RibbonApp : public QApplication
 {
     Q_OBJECT
 public:
-    RibbonApp(int argc, char** argv);
+    RibbonApp(int &argc, char** argv);
     void start();
 
 private:

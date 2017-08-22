@@ -1,5 +1,6 @@
 #include "settings.h"
 
+#include <QFileInfo>
 #include <QSettings>
 #include <QStandardPaths>
 
@@ -9,16 +10,25 @@ Settings::Settings(QObject *)
 }
 
 bool Settings::load()
-{
-    return false;
-    QSettings settings(settingsFileName(), QSettings::IniFormat);
+{    
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, QString("RZ"), QString("RZ Ribbon"));
+    QFileInfo finfo(settings.fileName());
+    if(!(finfo.exists() && finfo.isFile()))
+        return false;
 
-//    QString server_ip = settings.value("server_ip", "91.102.155.28").toString();
-//    quint16 server_port = (quint16)settings.value("server_port", "10123").toInt();
-//    QString images_server_prefix = settings.value("images_server_prefix", "http://91.102.155.28/is/?link=").toString();
+    login = settings.value("login").toString();
+    passwd = settings.value("passwd").toString();
+    server = settings.value("server").toString();
+    port = settings.value("port").toInt();
+    show_notifications = settings.value("show_notifications").toBool();
+    show_ribbon = settings.value("show_ribbon").toBool();
+    write_log = settings.value("write_log").toBool();
+    logfile = settings.value("logfile").toString();
+    emit changed(this);
+    return true;
 }
 
-void Settings::setSettings(const QString &login_,
+void Settings::set(const QString &login_,
         const QString &passwd_,
         const QString &server_,
         int port_,
@@ -36,6 +46,16 @@ void Settings::setSettings(const QString &login_,
     fl |= set_val(show_ribbon, show_ribbon_);
     fl |= set_val(write_log, write_log_);
     fl |= set_val(logfile, logfile_);
+
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, QString("RZ"), QString("RZ Ribbon"));
+    settings.setValue("login", login);
+    settings.setValue("passwd", passwd);
+    settings.setValue("server", server);
+    settings.setValue("port", port);
+    settings.setValue("show_notifications", show_notifications);
+    settings.setValue("show_ribbon", show_ribbon);
+    settings.setValue("write_log", write_log);
+    settings.setValue("logfile", logfile);
     if(fl) emit changed(this);
 }
 

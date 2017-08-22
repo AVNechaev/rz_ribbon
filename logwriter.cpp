@@ -10,9 +10,9 @@ const int MAX_LINES_WRITTEN = 200;
 LogWriter::LogWriter(QObject *parent) :
     QObject(parent),
     tz(0),
+    enabled(false),
     lines_written(0),
-    file(),
-    enabled(false)
+    file()
 {
     pat_id2tf = std::map<int, int> {
         {2235, 5},

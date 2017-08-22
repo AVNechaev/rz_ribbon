@@ -7,10 +7,10 @@
 #include "logwriter.h"
 #include "settings.h"
 
-RibbonApp::RibbonApp(int argc, char **argv) :
+RibbonApp::RibbonApp(int &argc, char **argv) :
     QApplication(argc, argv)
 {    
-    //cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");    
+    //cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");
     cli = new FiresWSClient(this);
     notificator = new Notificator(this);
     ribbon_data = new RibbonModel(RIBBON_DEPTH, this);
@@ -29,15 +29,16 @@ RibbonApp::RibbonApp(int argc, char **argv) :
     connect(settings, &Settings::changed, log_writer, &LogWriter::settings_changed);
     connect(settings, &Settings::changed, notificator, &Notificator::settings_changed);
 
-    settings->setSettings(
-                "nechaev.andrey@gmail.com",
-                "123456",
-                "185.11.244.244",
-                8888,
-                false,
-                true,
-                true,
-                "./data.log");
+    if(!settings->load())
+        settings->set(
+                    "nechaev.andrey@gmail.com",
+                    "123456",
+                    "185.11.244.244",
+                    8888,
+                    false,
+                    true,
+                    true,
+                    "./data.log");
 }
 
 void RibbonApp::start()
