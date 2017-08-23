@@ -1,11 +1,13 @@
 #include "ribbonmodel.h"
 
-RibbonModel::RibbonModel(int depth_, QObject *parent) :
-    QAbstractTableModel(parent),
-    depth(depth_)
+RibbonModel::RibbonModel(int depth_, QFontMetrics metrics_, QObject *parent) :
+    QAbstractTableModel(parent),    
+    depth(depth_),
+    metrics(metrics_)
 {
 
 }
+
 
 int RibbonModel::rowCount(const QModelIndex&) const
 {
@@ -46,10 +48,6 @@ QVariant RibbonModel::extract_data(const QModelIndex &index) const
 
     const FireData& data = storage.at(row);
     QString trunc_name = data.pattern_name;
-    if(trunc_name.size() > 40)
-    {
-        trunc_name.truncate(35);
-        trunc_name.append("...");
-    }
-    return QString(trunc_name + "\n" + data.instr_name + " " + data.fire_time);
+//TODO: remove 280
+    return QString(metrics.elidedText(trunc_name, Qt::ElideRight, 280) + "\n" + data.instr_name + " " + data.fire_time);
 }

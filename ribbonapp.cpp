@@ -13,8 +13,8 @@ RibbonApp::RibbonApp(int &argc, char **argv) :
     //cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");
     cli = new FiresWSClient(this);
     notificator = new Notificator(this);
-    ribbon_data = new RibbonModel(RIBBON_DEPTH, this);
-    ribbon_wnd = new RibbonWnd();
+    ribbon_wnd = new RibbonWnd(RIBBON_DEPTH);
+    ribbon_data = new RibbonModel(RIBBON_DEPTH, ribbon_wnd->getRibbonFontMetrics(), this);
     ribbon_wnd->setModel(ribbon_data);
     log_writer = new LogWriter(this);
     settings = new Settings(this);

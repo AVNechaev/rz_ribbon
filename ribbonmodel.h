@@ -3,6 +3,7 @@
 
 #include <QAbstractTableModel>
 #include "firedata.h"
+#include <QFontMetrics>
 #include <QList>
 
 class RibbonModel : public QAbstractTableModel
@@ -10,7 +11,7 @@ class RibbonModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    RibbonModel(int depth, QObject *parent = Q_NULLPTR);
+    RibbonModel(int depth, QFontMetrics metrics_, QObject *parent = Q_NULLPTR);
     int rowCount(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -20,6 +21,7 @@ public slots:
     void on_fire(FireData msg);
 
 private:
+    QFontMetrics metrics;
     int depth;
     QList<FireData> storage;
 

@@ -15,9 +15,9 @@ FiresWSClient::FiresWSClient(
     port = port_;
     user_name = user_name_;
     pass = pass_;
-    //    timer.setInterval(10000);
-    //    timer.start();
-    //connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
+//        timer.setInterval(1000);
+//        timer.start();
+//    connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
     open_channel();
 }
 
@@ -75,8 +75,8 @@ void FiresWSClient::onGotFire(QString data)
 void FiresWSClient::onTimer()
 {
     static int cnt=0;
-    QString data = QString("ByTimer %1").arg(cnt++);
-    emit gotMessage(FireData{0, data, "-", "Now"});
+    QString data = QString("ByTimer %1 - very big and uly and other interesting stuff is here and i'm tired to write all this sh").arg(cnt++);
+    emit gotMessage(FireData{0, data, "PAIR", "Now"});
 }
 
 void FiresWSClient::settings_changed(const Settings *settings)
