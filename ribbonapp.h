@@ -17,6 +17,9 @@ public:
     RibbonApp(int &argc, char** argv);
     void start();
 
+private slots:
+    void show_settings();
+
 private:
     FiresWSClient* cli;
     Notificator* notificator;

@@ -58,8 +58,3 @@ void Settings::set(const QString &login_,
     settings.setValue("logfile", logfile);
     if(fl) emit changed(this);
 }
-
-QString Settings::settingsFileName() const
-{
-    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/settings.ini";
-}

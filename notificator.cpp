@@ -23,7 +23,7 @@ Notificator::Notificator(QObject *parent) :
     menu->addAction(actExit);
     setContextMenu(menu);
 
-    connect(actSettings, &QAction::triggered, this, &Notificator::showSettings);
+    connect(actSettings, &QAction::triggered, this, &Notificator::show_settings);
     connect(actToggleRibbon, &QAction::triggered, this, &Notificator::on_toggle_ribbon);
     connect(actExit, &QAction::triggered, this, &Notificator::exit);    
     setVisible(true);    
@@ -45,12 +45,6 @@ void Notificator::settings_changed(const Settings *settings)
         actToggleRibbon->setEnabled(false);
         if(ribbon_shown) on_toggle_ribbon();
     }
-}
-
-void Notificator::showSettings()
-{
-    SettingsWindow wnd;
-    wnd.exec();
 }
 
 void Notificator::exit()

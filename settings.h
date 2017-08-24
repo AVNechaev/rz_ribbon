@@ -50,8 +50,6 @@ private:
     bool show_ribbon;
     bool write_log;
     QString logfile;
-
-    QString settingsFileName() const;
 };
 
 

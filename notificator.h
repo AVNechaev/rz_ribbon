@@ -16,13 +16,13 @@ public:
 signals:
     void exitting();
     void toggleRibbon();
+    void show_settings();
 
 public slots:
     void on_fires_message(FireData message);
     void settings_changed(const Settings* settings);
 
-private slots:
-    void showSettings();   
+private slots:      
     void exit();
     void on_toggle_ribbon();
 
