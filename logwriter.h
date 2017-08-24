@@ -23,10 +23,11 @@ public slots:
 private:
     const QTimeZone tz;
     bool enabled;
+    QString logname;
     int lines_written;
     QFile file;
 
-    std::map<int, int> pat_id2tf;
+    QMap<QString, int> tf2minutes;
 };
 
 #endif // LOGWRITER_H

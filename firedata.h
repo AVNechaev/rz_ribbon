@@ -9,6 +9,7 @@ struct FireData
     QString pattern_name;
     QString instr_name;
     QString fire_time;
+    QString timeframe;
 };
 
 #endif // FIREDATA_H

@@ -15,9 +15,6 @@ FiresWSClient::FiresWSClient(
     port = port_;
     user_name = user_name_;
     pass = pass_;
-//        timer.setInterval(1000);
-//        timer.start();
-//    connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
     open_channel();
 }
 
@@ -28,6 +25,10 @@ FiresWSClient::FiresWSClient(QObject *parent) :
     user_name(),
     pass()
 {
+//        timer.setInterval(1000);
+//        timer.start();
+//    connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
+
     connect(&channel, &QWebSocket::connected, this, &FiresWSClient::onChannelConnected);
     connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);
 }
@@ -60,10 +61,12 @@ void FiresWSClient::onGotFire(QString data)
         if(!obj["instr"].isString()) throw std::runtime_error("no instr");
         if(!obj["ts"].isString()) throw std::runtime_error("no ts");
         if(!obj["pattern_id"].isDouble()) throw std::runtime_error("no pattern_id");
+        if(!obj["timeframe"].isString()) throw std::runtime_error("no timeframe");
         result.pattern_name = obj["pattern_name"].toString();
         result.instr_name = obj["instr"].toString();
         result.fire_time = obj["ts"].toString();
         result.pattern_id = obj["pattern_id"].toInt();
+        result.timeframe = obj["timeframe"].toString();
         emit gotMessage(result);
     }
     catch(const std::runtime_error& e)
