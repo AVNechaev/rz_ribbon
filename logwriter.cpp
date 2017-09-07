@@ -52,7 +52,7 @@ void LogWriter::on_fires_message(FireData message)
         lines_written = 0;
     }
     int frame = tf2minutes.value(message.timeframe, 0);
-    out << dt.toTime_t() << ";" << message.instr_name << ";" << frame << '\n';
+    out << dt.toTime_t() << ";" << message.instr_name << ";" << frame << ";" << message.pattern_name << '\n';
     out.flush();
     lines_written++;
 }

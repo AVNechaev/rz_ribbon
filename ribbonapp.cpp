@@ -8,6 +8,9 @@
 #include "settings.h"
 #include "settingswindow.h"
 
+#include <QStandardPaths>
+#include <QDir>
+
 RibbonApp::RibbonApp(int &argc, char **argv) :
     QApplication(argc, argv)
 {    
@@ -40,7 +43,7 @@ RibbonApp::RibbonApp(int &argc, char **argv) :
                     false,
                     true,
                     true,
-                    "./data.log");
+                    QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).filePath("feed.log"));
 }
 
 void RibbonApp::start()
