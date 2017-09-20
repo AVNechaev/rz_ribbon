@@ -35,15 +35,18 @@ RibbonApp::RibbonApp(int &argc, char **argv) :
     connect(settings, &Settings::changed, notificator, &Notificator::settings_changed);
 
     if(!settings->load())
+    {
         settings->set(
-                    "nechaev.andrey@gmail.com",
-                    "123456",
+                    "",
+                    "",
                     "185.11.244.244",
                     8888,
                     false,
                     true,
                     true,
-                    QDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).filePath("feed.log"));
+                    "C:/Users/Public/Documents/feed.log");
+        show_settings();
+    }
 }
 
 void RibbonApp::start()

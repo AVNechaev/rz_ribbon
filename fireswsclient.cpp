@@ -1,6 +1,7 @@
 #include "fireswsclient.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QThread>
 #include "settings.h"
 
 FiresWSClient::FiresWSClient(
@@ -44,6 +45,7 @@ void FiresWSClient::onChannelConnected()
 void FiresWSClient::onChannelDisconnected()
 {
     emit clientDisconnected();
+    QThread::sleep(1);
     open_channel();
 }
 
