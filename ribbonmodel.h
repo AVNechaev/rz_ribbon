@@ -5,6 +5,7 @@
 #include "firedata.h"
 #include <QFontMetrics>
 #include <QList>
+#include <QTimeZone>
 
 class RibbonModel : public QAbstractTableModel
 {
@@ -24,6 +25,7 @@ private:
     QFontMetrics metrics;
     int depth;
     QList<FireData> storage;
+    const QTimeZone tz, tz_msk;
 
     QVariant extract_data(const QModelIndex& index) const;
 };

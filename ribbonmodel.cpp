@@ -1,9 +1,13 @@
 #include "ribbonmodel.h"
 
+#include <QDateTime>
+
 RibbonModel::RibbonModel(int depth_, QFontMetrics metrics_, QObject *parent) :
     QAbstractTableModel(parent),    
     depth(depth_),
-    metrics(metrics_)
+    metrics(metrics_),
+    tz(0),
+    tz_msk("Europe/Moscow")
 {
 
 }
@@ -46,8 +50,14 @@ QVariant RibbonModel::extract_data(const QModelIndex &index) const
     int row = index.row();
     if(row >= storage.size()) return QVariant();
 
+
     const FireData& data = storage.at(row);
+    QDateTime dt = QDateTime::fromString(data.fire_time, "yyyy-MM-dd'T'HH:mm:ss.000Z");
+    dt.setTimeZone(tz);
     QString trunc_name = data.pattern_name;
+    //-5 == ".FXCM"
+    QString second_line = data.instr_name.left(data.instr_name.size() - 5) + " " + data.timeframe + " " + dt.toTimeZone(tz_msk).toString("HH:mm:ss");
+
 //TODO: remove 280
-    return QString(metrics.elidedText(trunc_name, Qt::ElideRight, 280) + "\n" + data.instr_name + " " + data.fire_time);
+    return QString(metrics.elidedText(trunc_name, Qt::ElideRight, 430) + "\n" + metrics.elidedText(second_line, Qt::ElideRight, 430));
 }
