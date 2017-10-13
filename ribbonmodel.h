@@ -7,6 +7,7 @@
 #include <QList>
 #include <QTimeZone>
 
+class Settings;
 class RibbonModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -20,12 +21,14 @@ public:
 
 public slots:
     void on_fire(FireData msg);
+    void settings_changed(const Settings* settings);
 
 private:
     QFontMetrics metrics;
     int depth;
     QList<FireData> storage;
-    const QTimeZone tz, tz_msk;
+    const QTimeZone tz;
+    QTimeZone tz_msk;
 
     QVariant extract_data(const QModelIndex& index) const;
 };

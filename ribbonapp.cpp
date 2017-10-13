@@ -33,6 +33,7 @@ RibbonApp::RibbonApp(int &argc, char **argv) :
     connect(settings, &Settings::changed, cli, &FiresWSClient::settings_changed);
     connect(settings, &Settings::changed, log_writer, &LogWriter::settings_changed);
     connect(settings, &Settings::changed, notificator, &Notificator::settings_changed);
+    connect(settings, &Settings::changed, ribbon_data, &RibbonModel::settings_changed);
 
     if(!settings->load())
     {
@@ -44,7 +45,8 @@ RibbonApp::RibbonApp(int &argc, char **argv) :
                     false,
                     true,
                     true,
-                    "C:/Users/Public/Documents/feed.log");
+                    "C:/Users/Public/Documents/feed.log",
+                    "Europe/Moscow");
         show_settings();
     }
 }

@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include <QObject>
+#include <QTimeZone>
 
 class Settings : public QObject
 {
@@ -17,13 +18,15 @@ public:
     void store();
 
     void set(const QString& login_,
-                     const QString& passwd_,
-                     const QString& server_,
-                     int port_,
-                     bool show_notifications_,
-                     bool show_ribbon_,
-                     bool write_log_,
-                     const QString& logfile_);
+             const QString& passwd_,
+             const QString& server_,
+             int port_,
+             bool show_notifications_,
+             bool show_ribbon_,
+             bool write_log_,
+             const QString& logfile_,
+             const QByteArray& timezone_
+             );
 
     QString getLogin() const { return login; }
     QString getPasswd() const { return passwd; }
@@ -33,6 +36,7 @@ public:
     bool isShow_ribbon() const { return show_ribbon; }
     bool isWrite_log() const { return write_log; }
     QString getLogfile() const { return logfile; }
+    const QTimeZone& getTimezone() const { return timezone; }
 
     template<typename T>
     static bool set_val(T& cur_data, const T& new_data)
@@ -50,6 +54,7 @@ private:
     bool show_ribbon;
     bool write_log;
     QString logfile;
+    QTimeZone timezone;
 };
 
 

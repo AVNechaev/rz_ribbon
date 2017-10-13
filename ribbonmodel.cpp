@@ -1,4 +1,5 @@
 #include "ribbonmodel.h"
+#include "settings.h"
 
 #include <QDateTime>
 
@@ -60,4 +61,13 @@ QVariant RibbonModel::extract_data(const QModelIndex &index) const
 
 //TODO: remove 280
     return QString(metrics.elidedText(trunc_name, Qt::ElideRight, 430) + "\n" + metrics.elidedText(second_line, Qt::ElideRight, 430));
+}
+
+void RibbonModel::settings_changed(const Settings *settings)
+{
+    if(tz_msk.id() != settings->getTimezone().id())
+    {
+        tz_msk = settings->getTimezone();
+        emit dataChanged(createIndex(0,0), createIndex(storage.size() - 1, 0));
+    }
 }
