@@ -40,7 +40,7 @@ RibbonApp::RibbonApp(int &argc, char **argv) :
         settings->set(
                     "",
                     "",
-                    "185.11.244.244",
+                    "930nyse.com",
                     8888,
                     false,
                     true,
