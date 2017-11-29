@@ -33,8 +33,8 @@ private slots:
     void onChannelConnected();
     void onChannelDisconnected();
     void onGotFire(QString data);
-
     void onTimer();    
+    void onSslErrors(const QList<QSslError> &errors);
 
 private:
     QString ip_address;
