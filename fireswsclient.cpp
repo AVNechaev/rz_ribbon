@@ -26,9 +26,9 @@ FiresWSClient::FiresWSClient(QObject *parent) :
     user_name(),
     pass()
 {
-//        timer.setInterval(1000);
-//        timer.start();
-//    connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
+    //        timer.setInterval(1000);
+    //        timer.start();
+    //    connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
 
     typedef void (QWebSocket:: *sslErrorsSignal)(const QList<QSslError> &);
     connect(&channel, static_cast<sslErrorsSignal>(&QWebSocket::sslErrors), this, &FiresWSClient::onSslErrors);
@@ -39,7 +39,7 @@ FiresWSClient::FiresWSClient(QObject *parent) :
 
 void FiresWSClient::onChannelConnected()
 {
-    emit clientConnected();    
+    emit clientConnected();
     channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"" + user_name + "\",\"password\":\"" + pass + "\"}");
     qDebug() << "connected";
 }
@@ -61,19 +61,27 @@ void FiresWSClient::onGotFire(QString data)
         if(doc.isNull()) throw std::runtime_error("doc is null");
         const QJsonObject& obj = doc.object();
         FireData result;
-        if(!obj["pattern_name"].isString()) throw std::runtime_error("no pattern_name");
-        if(!obj["instr"].isString()) throw std::runtime_error("no instr");
-        if(!obj["ts"].isString()) throw std::runtime_error("no ts");
-        if(!obj["pattern_id"].isDouble()) throw std::runtime_error("no pattern_id");
-        if(!obj["timeframe"].isString()) throw std::runtime_error("no timeframe");        
-        result.pattern_name = obj["pattern_name"].toString();
-        result.instr_name = obj["instr"].toString();
-        result.fire_time = obj["ts"].toString();
-        result.pattern_id = obj["pattern_id"].toInt();
-        result.timeframe = obj["timeframe"].toString();
-        if(obj["vartext"].isString())
-            result.vartext = obj["vartext"].toString();
-        emit gotMessage(result);
+        if(!obj["type"]) throw std::runtime_error("no type field");
+        QString type = obj["type"].toString();
+        if(type == "ping")
+        {
+            //process_ping();
+        }else if(type == "fire")
+        {
+            if(!obj["pattern_name"].isString()) throw std::runtime_error("no pattern_name");
+            if(!obj["instr"].isString()) throw std::runtime_error("no instr");
+            if(!obj["ts"].isString()) throw std::runtime_error("no ts");
+            if(!obj["pattern_id"].isDouble()) throw std::runtime_error("no pattern_id");
+            if(!obj["timeframe"].isString()) throw std::runtime_error("no timeframe");
+            result.pattern_name = obj["pattern_name"].toString();
+            result.instr_name = obj["instr"].toString();
+            result.fire_time = obj["ts"].toString();
+            result.pattern_id = obj["pattern_id"].toInt();
+            result.timeframe = obj["timeframe"].toString();
+            if(obj["vartext"].isString())
+                result.vartext = obj["vartext"].toString();
+            emit gotMessage(result);
+        }
     }
     catch(const std::runtime_error& e)
     {
@@ -108,7 +116,7 @@ void FiresWSClient::open_channel()
         return;
 
     QUrl url;
-//    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryVersionString();// << QSslConfiguration::supportedCiphers();
+    //    qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryVersionString();// << QSslConfiguration::supportedCiphers();
     url.setScheme("ws");
     url.setHost(ip_address);
     url.setPort(port);
