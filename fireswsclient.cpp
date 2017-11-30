@@ -34,12 +34,12 @@ FiresWSClient::FiresWSClient(QObject *parent) :
     connect(&channel, static_cast<sslErrorsSignal>(&QWebSocket::sslErrors), this, &FiresWSClient::onSslErrors);
     connect(&channel, &QWebSocket::connected, this, &FiresWSClient::onChannelConnected);
     connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);
+    connect(&channel, &QWebSocket::textMessageReceived, this, &FiresWSClient::onGotFire);
 }
 
 void FiresWSClient::onChannelConnected()
 {
-    emit clientConnected();
-    connect(&channel, &QWebSocket::textMessageReceived, this, &FiresWSClient::onGotFire);
+    emit clientConnected();    
     channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"" + user_name + "\",\"password\":\"" + pass + "\"}");
     qDebug() << "connected";
 }
