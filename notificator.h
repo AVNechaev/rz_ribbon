@@ -21,6 +21,8 @@ signals:
 public slots:
     void on_fires_message(FireData message);
     void settings_changed(const Settings* settings);
+    void clientConnected();
+    void clientDisconnected();
 
 private slots:      
     void exit();
@@ -33,6 +35,8 @@ private:
     QMenu* menu;
     bool show_notifications;
     bool ribbon_shown;
+
+    QIcon icon_connected, icon_disconnected;
 };
 
 #endif // NOTIFICATOR_H

@@ -26,9 +26,14 @@ RibbonApp::RibbonApp(int &argc, char **argv) :
     connect(notificator, &Notificator::exitting, this, &QApplication::quit);
     connect(notificator, &Notificator::toggleRibbon, ribbon_wnd, &RibbonWnd::toggle);
     connect(notificator, &Notificator::show_settings, this, &RibbonApp::show_settings);
+    connect(cli, &FiresWSClient::clientConnected, notificator, &Notificator::clientConnected);
+    connect(cli, &FiresWSClient::clientDisconnected, notificator, &Notificator::clientDisconnected);
+
     connect(cli, &FiresWSClient::gotMessage, notificator, &Notificator::on_fires_message);
     connect(cli, &FiresWSClient::gotMessage, ribbon_data, &RibbonModel::on_fire);
-    connect(cli, &FiresWSClient::gotMessage, log_writer, &LogWriter::on_fires_message);    
+    connect(cli, &FiresWSClient::gotMessage, log_writer, &LogWriter::on_fires_message);
+    connect(cli, &FiresWSClient::clientConnected, this, &RibbonApp::clientConnected);
+    connect(cli, &FiresWSClient::clientDisconnected, this, &RibbonApp::clientDisconnected);
 
     connect(settings, &Settings::changed, cli, &FiresWSClient::settings_changed);
     connect(settings, &Settings::changed, log_writer, &LogWriter::settings_changed);
@@ -55,7 +60,7 @@ void RibbonApp::start()
 {
     setApplicationDisplayName(tr("RZ Ribbon"));
     setApplicationName(tr("RZ Ribbon"));
-    setWindowIcon(QIcon(":/images/trayicon.png"));
+    setWindowIcon(QIcon(":/images/trayicon_disconnected.ico"));
     setQuitOnLastWindowClosed(false);
     notificator->show();
 }
@@ -66,4 +71,14 @@ void RibbonApp::show_settings()
     wnd.exec();
     if(wnd.result() == QDialog::Accepted)
         wnd.updateSettings(settings);
+}
+
+void RibbonApp::clientConnected()
+{
+    setWindowIcon(QIcon(":/images/trayicon_connected.ico"));
+}
+
+void RibbonApp::clientDisconnected()
+{
+    setWindowIcon(QIcon(":/images/trayicon_disconnected.ico"));
 }

@@ -45,6 +45,7 @@ private:
     QWebSocket channel;
 
     QTimer timer;
+    qint64 last_ping;
 
     void open_channel();
 };

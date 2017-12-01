@@ -19,6 +19,8 @@ public:
 
 private slots:
     void show_settings();
+    void clientConnected();
+    void clientDisconnected();
 
 private:
     FiresWSClient* cli;

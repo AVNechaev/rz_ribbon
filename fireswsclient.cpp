@@ -4,6 +4,7 @@
 #include <QThread>
 #include "settings.h"
 
+const qint64 PING_MISS_TIMEOUT = 3 * 60 * 1000;
 FiresWSClient::FiresWSClient(
         const QString &ip_address_,
         int port_,
@@ -26,9 +27,8 @@ FiresWSClient::FiresWSClient(QObject *parent) :
     user_name(),
     pass()
 {
-    //        timer.setInterval(1000);
-    //        timer.start();
-    //    connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
+    timer.setInterval(PING_MISS_TIMEOUT);
+    connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
 
     typedef void (QWebSocket:: *sslErrorsSignal)(const QList<QSslError> &);
     connect(&channel, static_cast<sslErrorsSignal>(&QWebSocket::sslErrors), this, &FiresWSClient::onSslErrors);
@@ -42,10 +42,13 @@ void FiresWSClient::onChannelConnected()
     emit clientConnected();
     channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"" + user_name + "\",\"password\":\"" + pass + "\"}");
     qDebug() << "connected";
+    last_ping = QDateTime::currentMSecsSinceEpoch();
+    timer.start();
 }
 
 void FiresWSClient::onChannelDisconnected()
 {
+    timer.stop();
     emit clientDisconnected();
     QThread::sleep(1);
     open_channel();
@@ -61,12 +64,13 @@ void FiresWSClient::onGotFire(QString data)
         if(doc.isNull()) throw std::runtime_error("doc is null");
         const QJsonObject& obj = doc.object();
         FireData result;
-        if(!obj["type"]) throw std::runtime_error("no type field");
+        if(!obj["type"].isString()) throw std::runtime_error("no type field");
         QString type = obj["type"].toString();
         if(type == "ping")
         {
-            //process_ping();
-        }else if(type == "fire")
+            last_ping = QDateTime::currentMSecsSinceEpoch();
+        }
+        else if(type == "fire")
         {
             if(!obj["pattern_name"].isString()) throw std::runtime_error("no pattern_name");
             if(!obj["instr"].isString()) throw std::runtime_error("no instr");
@@ -91,9 +95,9 @@ void FiresWSClient::onGotFire(QString data)
 
 void FiresWSClient::onTimer()
 {
-    static int cnt=0;
-    QString data = QString("ByTimer %1 - very big and uly and other interesting stuff is here and i'm tired to write all this sh").arg(cnt++);
-    emit gotMessage(FireData{0, data, "PAIR", "Now"});
+    qDebug() << PING_MISS_TIMEOUT <<" ; " << last_ping << QDateTime::currentMSecsSinceEpoch() << QDateTime::currentDateTime();
+    if((QDateTime::currentMSecsSinceEpoch() - last_ping) > PING_MISS_TIMEOUT)
+        channel.close(QWebSocketProtocol::CloseCodeProtocolError, "ping timeout");
 }
 
 void FiresWSClient::settings_changed(const Settings *settings)

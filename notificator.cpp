@@ -7,10 +7,11 @@
 Notificator::Notificator(QObject *parent) :
     QSystemTrayIcon(parent),
     show_notifications(false),
-    ribbon_shown(false)
+    ribbon_shown(false),
+    icon_connected(":/images/trayicon_connected.ico"),
+    icon_disconnected(":/images/trayicon_disconnected.ico")
 {
-    QIcon icon(":/images/trayicon.png");
-    setIcon(icon);
+    setIcon(icon_disconnected);
 
     actSettings = new QAction(tr("Settings"), this);
     actToggleRibbon = new QAction(tr("Show ribbon"), this);
@@ -45,6 +46,16 @@ void Notificator::settings_changed(const Settings *settings)
         actToggleRibbon->setEnabled(false);
         if(ribbon_shown) on_toggle_ribbon();
     }
+}
+
+void Notificator::clientConnected()
+{    
+    setIcon(icon_connected);
+}
+
+void Notificator::clientDisconnected()
+{
+    setIcon(icon_disconnected);
 }
 
 void Notificator::exit()
