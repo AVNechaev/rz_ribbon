@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = rz_ribbon
 TEMPLATE = app
-
+VERSION = 1.2.15
 
 SOURCES += main.cpp\        
     fireswsclient.cpp \
@@ -38,3 +38,9 @@ RESOURCES += \
 FORMS += \
     settingswindow.ui \
     ribbonwnd.ui
+
+win32 {
+    release {
+        QMAKE_POST_LINK = $$shell_path($$_PRO_FILE_PWD_)\tools\zip.exe $$shell_path($$_PRO_FILE_PWD_)\releases\\$${TARGET}_$${VERSION}.zip $$shell_path($$OUT_PWD)\release\\$${TARGET}.exe
+    }
+}
