@@ -108,10 +108,10 @@ void FiresWSClient::settings_changed(const Settings *settings)
     changed |= Settings::set_val(user_name, settings->getLogin());
     changed |= Settings::set_val(pass, settings->getPasswd());
     if(changed)
-    {
-        channel.close();
-        open_channel();
-    }
+        if(channel.isValid())
+            channel.close(QWebSocketProtocol::CloseCodeGoingAway, "credentials changed");
+        else
+            open_channel();
 }
 
 void FiresWSClient::open_channel()
