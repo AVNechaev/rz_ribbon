@@ -41,6 +41,6 @@ FORMS += \
 
 win32 {
     release {
-        QMAKE_POST_LINK = $$shell_path($$_PRO_FILE_PWD_)\tools\zip.exe $$shell_path($$_PRO_FILE_PWD_)\releases\\$${TARGET}_$${VERSION}.zip $$shell_path($$OUT_PWD)\release\\$${TARGET}.exe
+        QMAKE_POST_LINK = $$shell_path($$_PRO_FILE_PWD_)\tools\zip.exe -j $$shell_path($$_PRO_FILE_PWD_)\releases\\$${TARGET}_$${VERSION}.zip $$shell_path($$OUT_PWD)\release\\$${TARGET}.exe
     }
 }
