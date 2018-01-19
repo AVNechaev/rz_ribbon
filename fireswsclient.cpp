@@ -1,8 +1,13 @@
+//temrorary hack to allow glog.lib be linked as static
+//disable __declspec(dllimport)
+#define GOOGLE_GLOG_DLL_DECL
+
 #include "fireswsclient.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QThread>
 #include "settings.h"
+#include "glog/logging.h"
 
 const qint64 PING_MISS_TIMEOUT = 3 * 60 * 1000;
 FiresWSClient::FiresWSClient(
@@ -39,6 +44,7 @@ FiresWSClient::FiresWSClient(QObject *parent) :
 
 void FiresWSClient::onChannelConnected()
 {
+    LOG(INFO) << "Client connected";
     emit clientConnected();
     channel.sendTextMessage("{\"action\":\"auth\",\"login\":\"" + user_name + "\",\"password\":\"" + pass + "\"}");
     qDebug() << "connected";
@@ -48,6 +54,7 @@ void FiresWSClient::onChannelConnected()
 
 void FiresWSClient::onChannelDisconnected()
 {
+    LOG(WARNING) << "WS channel disconnected; " << channel.errorString().toStdString();
     timer.stop();
     emit clientDisconnected();
     QThread::sleep(1);
@@ -89,7 +96,7 @@ void FiresWSClient::onGotFire(QString data)
     }
     catch(const std::runtime_error& e)
     {
-        qWarning() << "undecoded message: " << data << ": " << e.what();
+        LOG(WARNING) << "undecoded message: " << data.toStdString() << ": " << e.what();
     }
 }
 
@@ -97,7 +104,11 @@ void FiresWSClient::onTimer()
 {
     qDebug() << PING_MISS_TIMEOUT <<" ; " << last_ping << QDateTime::currentMSecsSinceEpoch() << QDateTime::currentDateTime();
     if((QDateTime::currentMSecsSinceEpoch() - last_ping) > PING_MISS_TIMEOUT)
+    {
+        LOG(WARNING) << "WS ping timeout";
+        LOG(WARNING) << PING_MISS_TIMEOUT <<" ; " << last_ping << QDateTime::currentMSecsSinceEpoch() << QDateTime::currentDateTime().toString().toStdString();
         channel.close(QWebSocketProtocol::CloseCodeProtocolError, "ping timeout");
+    }
 }
 
 void FiresWSClient::settings_changed(const Settings *settings)
@@ -109,7 +120,10 @@ void FiresWSClient::settings_changed(const Settings *settings)
     changed |= Settings::set_val(pass, settings->getPasswd());
     if(changed)
         if(channel.isValid())
+        {
+            LOG(INFO) << "Closing as settings changed";
             channel.close(QWebSocketProtocol::CloseCodeGoingAway, "credentials changed");
+        }
         else
             open_channel();
 }
@@ -129,5 +143,6 @@ void FiresWSClient::open_channel()
 
 void FiresWSClient::onSslErrors(const QList<QSslError> &errors)
 {
-    qDebug() << errors;
+    for(const auto err : errors.toStdList())
+        LOG(WARNING) << "WSS error: " << err.errorString().toStdString();
 }
