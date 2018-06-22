@@ -10,7 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = rz_ribbon
 TEMPLATE = app
-VERSION = 1.2.16
+VERSION = 1.2.17
 
 win32 {
     INCLUDEPATH += "$$_PRO_FILE_PWD_/3rdparty/glog/win32/include"

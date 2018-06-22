@@ -13,9 +13,12 @@
 
 RibbonApp::RibbonApp(int &argc, char **argv) :
     QApplication(argc, argv)
-{    
-    settings = new Settings(this);
-    //cli = new FiresWSClient("930nyse.com", 8888, "nechaev.andrey@gmail.com", "123456");
+{        
+    if(argc >= 2)
+        settings = new Settings(QString(argv[1]), this);
+    else
+        settings = new Settings(this);
+
     cli = new FiresWSClient(this);
     notificator = new Notificator(this);
     ribbon_wnd = new RibbonWnd(RIBBON_DEPTH);

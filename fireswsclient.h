@@ -35,6 +35,7 @@ private slots:
     void onGotFire(QString data);
     void onTimer();    
     void onSslErrors(const QList<QSslError> &errors);
+    void open_channel();
 
 private:
     QString ip_address;
@@ -44,10 +45,8 @@ private:
 
     QWebSocket channel;
 
-    QTimer timer;
-    qint64 last_ping;
-
-    void open_channel();
+    QTimer timer, reconnect_timer;
+    qint64 last_ping;    
 };
 
 #endif // FIRESWSCLIENT_H

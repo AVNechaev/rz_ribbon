@@ -2,6 +2,8 @@
 #define SETTINGS_H
 
 #include <QObject>
+#include <QSettings>
+#include <memory>
 #include <QTimeZone>
 
 class Settings : public QObject
@@ -13,6 +15,7 @@ signals:
 
 public:
     explicit Settings(QObject* = Q_NULLPTR);
+    explicit Settings(QString custom_filename, QObject* = Q_NULLPTR);
 
     bool load();
     void store();
@@ -46,6 +49,9 @@ public:
     }
 
 private:
+    bool use_custom_file;
+    QString custom_filename;
+
     QString login;
     QString passwd;
     QString server;
@@ -55,6 +61,8 @@ private:
     bool write_log;
     QString logfile;
     QTimeZone timezone;
+
+    std::unique_ptr<QSettings> init_settings_file();
 };
 
 

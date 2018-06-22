@@ -10,6 +10,7 @@
 #include "glog/logging.h"
 
 const qint64 PING_MISS_TIMEOUT = 3 * 60 * 1000;
+const qint64 RECONNECT_TIMEOUT = 1000;
 FiresWSClient::FiresWSClient(
         const QString &ip_address_,
         int port_,
@@ -33,6 +34,8 @@ FiresWSClient::FiresWSClient(QObject *parent) :
     pass()
 {
     timer.setInterval(PING_MISS_TIMEOUT);
+    reconnect_timer.setInterval(RECONNECT_TIMEOUT);
+
     connect(&timer, &QTimer::timeout, this, &FiresWSClient::onTimer);
 
     typedef void (QWebSocket:: *sslErrorsSignal)(const QList<QSslError> &);
@@ -40,6 +43,7 @@ FiresWSClient::FiresWSClient(QObject *parent) :
     connect(&channel, &QWebSocket::connected, this, &FiresWSClient::onChannelConnected);
     connect(&channel, &QWebSocket::disconnected, this, &FiresWSClient::onChannelDisconnected);
     connect(&channel, &QWebSocket::textMessageReceived, this, &FiresWSClient::onGotFire);
+    connect(&reconnect_timer, &QTimer::timeout, this, &FiresWSClient::open_channel);
 }
 
 void FiresWSClient::onChannelConnected()
@@ -54,11 +58,12 @@ void FiresWSClient::onChannelConnected()
 
 void FiresWSClient::onChannelDisconnected()
 {
+    qDebug() << "WS channel disconnected; " << channel.errorString();
     LOG(WARNING) << "WS channel disconnected; " << channel.errorString().toStdString();
     timer.stop();
     emit clientDisconnected();
-    QThread::sleep(1);
-    open_channel();
+    reconnect_timer.setSingleShot(true);
+    reconnect_timer.start();
 }
 
 void FiresWSClient::onGotFire(QString data)
