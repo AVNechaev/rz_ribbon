@@ -2,12 +2,13 @@
 
 Unicode true
 
-!define VERSION "1.2.2"
+!define VERSION "1.2.1s"
 !define APP_NAME "MultiRobotGAGARIN"
 BrandingText "${APP_NAME} Installer"
 Name "${APP_NAME} v${VERSION}"
 OutFile "${APP_NAME}v${VERSION}.exe"
 InstallDir "$PROGRAMFILES\${APP_NAME}"
+!define ROBOT_FILE "MultiRobotGAGARIN_v1.2.1.s.ex4"
   
 InstallDirRegKey HKCU "Software\${APP_NAME}" ""
 
@@ -69,16 +70,21 @@ Section "Ribbon" Ribbon
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   ExecWait '"$INSTDIR\vcredist_x86.exe" /quiet'
 
-
-    CreateDirectory "$SMPROGRAMS\${APP_NAME}"
-    CreateShortcut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "$INSTDIR\rz_ribbon.exe"
-    CreateShortcut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-
+  CreateDirectory "$SMPROGRAMS\${APP_NAME}"
+  CreateShortcut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "$INSTDIR\rz_ribbon.exe"
+  CreateShortcut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
 SectionEnd
 
 Section "MT4 Robot" Robot
-  File "robot\MultiRobotGAGARIN_v1.2.1.s.ex4"
-  ExecWait `for /f "tokens=*" %%a in ('dir "%AppData%\MetaQuotes\Terminal" /ad/b') do xcopy "$INSTDIR\MultiRobotGAGARIN_v1.2.ex4" /y "%AppData%\MetaQuotes\Terminal\%%a\MQL4\Experts\"`
+  SetOutPath $INSTDIR
+  File "robot\${ROBOT_FILE}"
+  File seed_ex4.bat
+  ClearErrors
+  ExecWait "$INSTDIR\seed_ex4.bat"
+#  ExecWait `for /f "tokens=*" %%a in ('dir "%AppData%\MetaQuotes\Terminal" /ad/b') do xcopy "$INSTDIR\${ROBOT_FILE}" /y "%AppData%\MetaQuotes\Terminal\%%a\MQL4\Experts\"`
+  IfErrors 0 noError
+   MessageBox MB_OK "Error occured during seeding the robot"
+noError:
 SectionEnd
 
 Section "Uninstall"
@@ -111,7 +117,8 @@ Section "Uninstall"
   Delete "$INSTDIR\opengl32sw.dll"
   Delete "$INSTDIR\libGLESV2.dll"
   Delete "$INSTDIR\rz_ribbon.exe"
-  Delete "$INSTDIR\MultiRobotGAGARIN_v1.2.1.s.ex4"
+  Delete "$INSTDIR\${ROBOT_FILE}"
+  Delete "$INSTDIR\seed_ex4.bat"
   Delete "$DESKTOP\${APP_NAME}.lnk"
 
   RMDir "$INSTDIR\iconengines"
@@ -121,8 +128,6 @@ Section "Uninstall"
   RMDir "$INSTDIR\imageformats"
   RMDir "$INSTDIR"
 
-#  !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
-    
   Delete "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk"
   Delete "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk"
   RMDir "$SMPROGRAMS\${APP_NAME}"
