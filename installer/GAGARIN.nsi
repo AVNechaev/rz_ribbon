@@ -1,14 +1,22 @@
 !include MUI2.nsh
 
+!define MUI_ICON "bitmaps\gagarin.ico"
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
+!define MUI_HEADERIMAGE_BITMAP "bitmaps\gagarin.bmp"
+!define MUI_HEADERIMAGE_RIGHT
+
 Unicode true
 
 !define VERSION "1.2.1s"
 !define APP_NAME "MultiRobotGAGARIN"
+!define INST_FEATURES "brl"
 BrandingText "${APP_NAME} Installer"
 Name "${APP_NAME} v${VERSION}"
-OutFile "${APP_NAME}v${VERSION}.exe"
+OutFile "${APP_NAME}v${VERSION}_${INST_FEATURES}.exe"
 InstallDir "$PROGRAMFILES\${APP_NAME}"
 !define ROBOT_FILE "MultiRobotGAGARIN_v1.2.1.s.ex4"
+!define LENTA_FILE "MultiLentaGAGARIN_v1.2.ex4"
   
 InstallDirRegKey HKCU "Software\${APP_NAME}" ""
 
@@ -17,7 +25,6 @@ RequestExecutionLevel admin
 #Var StartMenuFolder
 
 !insertmacro MUI_LANGUAGE "Russian"
-
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 
@@ -65,19 +72,21 @@ Section "Ribbon" Ribbon
   File "ribbon\opengl32sw.dll"
   File "ribbon\libGLESV2.dll"
   File "ribbon\rz_ribbon.exe"
+  File "bitmaps\gagarin.ico"
 
-  CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\rz_ribbon.exe"
+  CreateShortcut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\rz_ribbon.exe" "" "$INSTDIR\gagarin.ico"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   ExecWait '"$INSTDIR\vcredist_x86.exe" /quiet'
 
   CreateDirectory "$SMPROGRAMS\${APP_NAME}"
-  CreateShortcut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "$INSTDIR\rz_ribbon.exe"
-  CreateShortcut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+  CreateShortcut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "$INSTDIR\rz_ribbon.exe" "" "$INSTDIR\gagarin.ico"
+  CreateShortcut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\gagarin.ico"
 SectionEnd
 
 Section "MT4 Robot" Robot
   SetOutPath $INSTDIR
   File "robot\${ROBOT_FILE}"
+  File "robot\${LENTA_FILE}"
   File seed_ex4.bat
   ClearErrors
   ExecWait "$INSTDIR\seed_ex4.bat"
@@ -118,7 +127,9 @@ Section "Uninstall"
   Delete "$INSTDIR\libGLESV2.dll"
   Delete "$INSTDIR\rz_ribbon.exe"
   Delete "$INSTDIR\${ROBOT_FILE}"
+  Delete "$INSTDIR\${LENTA_FILE}"
   Delete "$INSTDIR\seed_ex4.bat"
+  Delete "$INSTDIR\gagarin.ico"
   Delete "$DESKTOP\${APP_NAME}.lnk"
 
   RMDir "$INSTDIR\iconengines"
