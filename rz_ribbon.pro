@@ -20,8 +20,8 @@ win32 {
         LIBS += -L"$$_PRO_FILE_PWD_/3rdparty/glog/win32/lib" -lglogd
     }
 } else {
-#TODO:
-    INCLUDEPATH += "$$_PRO_FILE_PWD_/3rdparty/glog/include/linux"
+    INCLUDEPATH += "$$_PRO_FILE_PWD_/3rdparty/glog/linux/include"
+    LIBS += -L"$$_PRO_FILE_PWD_/3rdparty/glog/linux/lib" -lglog -L/usr/lib/i386-linux-gnu/mesa/
 }
 
 SOURCES += main.cpp\        
